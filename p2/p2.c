@@ -1,21 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 struct ListNode {
    int val;
    struct ListNode *next;
 };
-
-int len(struct ListNode* l)
-{
-    int n = 0;
-    while (l != NULL) {
-        n++;
-        l = l->next;
-    }
-    return n;
-}
 
 struct ListNode* transform(int* v, int len)
 {
@@ -42,48 +31,37 @@ struct ListNode* transform(int* v, int len)
     return h;
 }
 
-int* transform2(struct ListNode* l, int len)
-{
-    int* result = malloc(sizeof(int) * len);
-    int i;
-    for (i = len - 1; i >= 0; i--) {
-        result[i] = l->val;
-        l = l->next;
-    }
-    return result;
-}
-
 struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
-    int len1, len2;
-    int *a, *b, *c; 
-    int m, i, t;
-    struct ListNode *result, *p, *q;
-    len1 = len(l1);
-    len2 = len(l2);
-    a = transform2(l1, len1);
-    b = transform2(l2, len2);;
-    m = len1 > len2 ? len1 : len2;
-    c = malloc((m + 1)* sizeof(int));
-    t = 0;
-    for (i = 0; i < m; i++) {
-        c[i] = (i >= len1 ? 0 : a[i]) + (i >= len2 ? 0 : b[i]) + t;
-        if (c[i] > 9) {
-            c[i] -= 10;
-            t = 1;
-        } else {
-            t = 0;
+    int needCarry = 0;
+    struct ListNode *x, *h, *pre;
+    h = malloc(sizeof(struct ListNode));
+    pre = h;
+    while (l1 != NULL || l2 != NULL) {
+        printf("%d, %d", l1->val, l2->val);
+        x = malloc(sizeof(struct ListNode));
+        x->val = (l1 == NULL ? 0 : l1->val) + (l2 == NULL ? 0 : l2->val)
+                + (needCarry ? 1 : 0);
+        needCarry = x->val >= 10;
+        x->val = needCarry ? x->val - 10 : x->val;
+        pre->next = x;
+        pre = x;
+        if (l1 != NULL) {
+            l1 = l1->next;
+        }
+        if (l2 != NULL) {
+            l2 = l2->next;
         }
     }
-    c[m] = t;
-    return transform(c, m + 1);
+    return h->next;
 }
 
 int main()
 {
-    int a[] = {0};
-    int b[] = {0};
+    int a[] = {1, 2, 3};
+    int b[] = {2, 9, 8};
     int t;
     struct ListNode *ha, *hb, *result;
+printf("%d", 1);
     ha = transform(a, sizeof(a) / sizeof(int));
     hb = transform(b, sizeof(b) / sizeof(int));
     result = addTwoNumbers(ha, hb);

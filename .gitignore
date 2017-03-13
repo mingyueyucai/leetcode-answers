@@ -1,1 +1,5 @@
 *.out
+*.swp
+cmake-build-debug/
+CMakeLists.txt
+.idea/
